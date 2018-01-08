@@ -1,9 +1,10 @@
 const request = require('request');
 
 exports.handleSubmit = function(req, res) {
-  console.log(req.body);
+  console.log(req.body.action);
   const pull_request = req.body.pull_request;
   if(req.body.action === 'opened') {
+  console.log(req.body.action.pull_request.diff_url);
     request(pull_request.diff_url, (error, response, body) => {
 
       if(isSingleFileChangeAndNoDeletions(body) && isChangeInContributorsFile(body)) {
