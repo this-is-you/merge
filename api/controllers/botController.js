@@ -21,7 +21,7 @@ Could you explain how you felt when you went through the tutorial, made a pull r
           console.log('error:', error); // Print the error if one occurred
           console.log('options:', options); // Print the error if one occurred
           console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-          options.url = `$(pullRequest.issue_url)/comments`
+          options.url = `${pullRequest.issue_url}/comments`
           if(response.statusCode === 200) {
             request.post(options, function (error, response, body) {
               console.log('error:', error); // Print the error if one occurred
