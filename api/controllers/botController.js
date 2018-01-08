@@ -1,9 +1,10 @@
 const request = require('request');
 
 exports.handleSubmit = function(req, res) {
-  console.log(req.body.payload.action);
-  const pull_request = req.body.payload.pull_request;
-  if(req.body.payload.action === 'opened') {
+  console.log(req.body.action);
+  const pull_request = req.body.pull_request;
+  if(req.body.action === 'opened') {
+    console.log(req.body.pull_request.diff_url);
     console.log(pull_request.diff_url);
     request(pull_request.diff_url, (error, response, body) => {
 
