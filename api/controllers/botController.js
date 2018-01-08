@@ -37,11 +37,11 @@ Could you explain how you felt when you went through the tutorial, made a pull r
 }
 
 const isSingleFileChangeAndNoDeletions = function(diff) {
-  return diff.match(/[^-]--[^-]/g).length === 1;
+  return (diff.match(/[^-]--[^-]/g) || [] ).length === 1;
 };
 
 const isChangeInContributorsFile = function(diff) {
-  return diff.match(/Contributors\.md/g).length === 4;
+  return (diff.match(/Contributors\.md/g) || [] ).length === 4;
 };
 
 const isSingleAddition = function(pullRequest) {
