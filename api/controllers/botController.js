@@ -25,6 +25,12 @@ Do check it out https://github.com/Roshanjossey/first-contributions` },
           console.log('options:', options); // Print the error if one occurred
           console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
         });
+        options.url = `${pull_request.url}/merge`
+        request.put(options, function (error, response, body) {
+          console.log('error:', error); // Print the error if one occurred
+          console.log('options:', options); // Print the error if one occurred
+          console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+        });
       }
     })
   }
