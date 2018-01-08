@@ -1,11 +1,10 @@
 const request = require('request');
 
 exports.handleSubmit = function(req, res) {
-  const pull_request = req.body.payload.pull_request;
-  console.log(req.body.payload.action);
-  if(req.body.payload.action === 'opened') {
+  console.log(req.body);
+  const pull_request = req.body.pull_request;
+  if(req.body.action === 'opened') {
     request(pull_request.diff_url, (error, response, body) => {
-      console.log(body);
 
       if(isSingleFileChangeAndNoDeletions(body) && isChangeInContributorsFile(body)) {
         const options = {
