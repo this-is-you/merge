@@ -2,7 +2,7 @@ const request = require('request');
 
 exports.handleSubmit = function(req, res) {
   const pullRequest = req.body.pull_request;
-  if((req.body.action === 'opened' || req.body.action === 'edited') && isSingleAddition(pullRequest)) {
+  if(req.body.action === 'opened' && isSingleAddition(pullRequest)) {
     request(pullRequest.diff_url, (error, response, body) => {
 
       if(isSingleFileChangeAndNoDeletions(body) && isChangeInContributorsFile(body)) {
