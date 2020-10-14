@@ -40,7 +40,7 @@ const postComment = (pullRequest) => {
 }
 
 const shouldHandlePullRequestChange = req =>
-  req.body.action === 'opened' && isSingleLineChange(req.body.pull_request)
+  (['opened', 'reopened', 'synchronized' ].includes(req.body.action)) && isSingleLineChange(req.body.pull_request)
 
 const isChangeInContributorsFile = diff =>
   (diff.match(/Contributors\.md/g) || []).length === 4
