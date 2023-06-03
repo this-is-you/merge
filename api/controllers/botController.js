@@ -4,7 +4,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 exports.handleSubmit = (req, res) => {
   const pullRequest = req.body.pull_request
   if (shouldHandlePullRequestChange(req)) {
-    const result = handlePuRequest(pullRequest)
+    const result = handlePullRequest(pullRequest)
     res.json({ message: result })
   }
   res.json({ message: "Can't handle this pull request" })
