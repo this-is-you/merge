@@ -1,4 +1,4 @@
-const request = require('request')
+const fetch = require('node-fetch');
 
 exports.handleSubmit = (req, res) => {
   const pullRequest = req.body.pull_request
@@ -9,35 +9,47 @@ exports.handleSubmit = (req, res) => {
   res.json({ message: "Can't handle this pull request" })
 }
 
-const handlePuRequest = (pullRequest) => {
-  request(pullRequest.diff_url, (error, response, body) => {
-    logStatusAndErrors(error, response)
+const handlePullRequest = async (pullRequest) => {
+  try {
+    const response = await fetch(pullRequest.diff_url);
+    const body = await response.text();
+    logStatusAndErrors(null, response);
     if (isChangeInContributorsFile(body)) {
-      return mergePullRequest(pullRequest)
+      return mergePullRequest(pullRequest);
     }
+    return 'diff check failed';
+  } catch (error) {
+    logStatusAndErrors(error, null);
+    return `diff check failed ${error}`;
+  }
+};
 
-    return `diff check failed ${error}`
-  })
-}
-
-const mergePullRequest = (pullRequest) => {
-  const options = getPostRequestOptions(pullRequest.user.login, `${pullRequest.url}/merge`)
-  request.put(options, (error, response, body) => {
-    logStatusAndErrors(error, response)
-    if (response.statusCode === 200) {
-      return postComment(pullRequest)
+const mergePullRequest = async (pullRequest) => {
+  try {
+    const options = getPostRequestOptions(pullRequest.user.login, `${pullRequest.url}/merge`);
+    const response = await fetch.put(options);
+    logStatusAndErrors(null, response);
+    if (response.status === 200) {
+      return postComment(pullRequest);
     }
-    return `Merge failed ${error}`
-  })
-}
+    return 'Merge failed';
+  } catch (error) {
+    logStatusAndErrors(error, null);
+    return `Merge failed ${error}`;
+  }
+};
 
-const postComment = (pullRequest) => {
-  const options = getPostRequestOptions(pullRequest.user.login, `${pullRequest.issue_url}/comments`)
-  request.post(options, (error, response, body) => {
-    logStatusAndErrors(error, response)
-    return !error ? 'Awesome': `Commenting failed ${error}`
-  })
-}
+const postComment = async (pullRequest) => {
+  try {
+    const options = getPostRequestOptions(pullRequest.user.login, `${pullRequest.issue_url}/comments`);
+    const response = await fetch.post(options);
+    logStatusAndErrors(null, response);
+    return response.ok ? 'Awesome' : 'Commenting failed';
+  } catch (error) {
+    logStatusAndErrors(error, null);
+    return `Commenting failed ${error}`;
+  }
+};
 
 const shouldHandlePullRequestChange = req =>
   (['opened', 'reopened', 'synchronized' ].includes(req.body.action)) && isSingleLineChange(req.body.pull_request)
